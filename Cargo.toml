@@ -1,0 +1,8 @@
+[package]
+name = "greek"
+version = "0.1.0"
+authors = ["George Moschovitis <gmosx@reizu.com>"]
+edition = "2018"
+
+[dependencies]
+regex = "1"
