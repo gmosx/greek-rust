@@ -6,4 +6,3 @@ General utilities for the Greek language and culture.
 
 -   transliteration
 -   diacritics
--   easter
