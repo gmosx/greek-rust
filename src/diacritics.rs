@@ -1,43 +1,34 @@
+use lazy_static::lazy_static;
 use regex::Regex;
 
-// var stripDiacriticsRules = []rule{
-//     {regexp.MustCompile("[άἀἁἂἃἄἅἆἇὰάᾀᾁᾂᾃᾄᾅᾆᾇᾰᾱᾲᾳᾴᾶᾷ]"), "α"},
-//     {regexp.MustCompile("[ΆἈἉἊἋἌἍἎἏᾈᾉᾊᾋᾌᾍᾎᾏᾸᾹᾺΆᾼ]"), "Α"},
-//     {regexp.MustCompile("[έἐἑἒἓἔἕὲέ]"), "ε"},
-//     {regexp.MustCompile("[ΈἘἙἚἛἜἝ]"), "Ε"},
-//     {regexp.MustCompile("[ήἠἡἢἣἤἥἦἧῆὴῇ]"), "η"},
-//     {regexp.MustCompile("[ΉἨἩἪἫἬἭἮἯ]"), "Η"},
-//     {regexp.MustCompile("[ίἰἱἲἳἴἵὶῖϊ]"), "ι"},
-//     {regexp.MustCompile("[ΊἶἷἸἹἺἻἼἽἾἿΪ]"), "Ι"},
-//     {regexp.MustCompile("[όὀὁὂὃὄὅὸ]"), "ο"},
-//     {regexp.MustCompile("[ΌὈὉὊὋὌὍ]"), "Ο"},
-//     {regexp.MustCompile("[ύὐὑὒὓὔὕὖὗ]"), "υ"},
-//     {regexp.MustCompile("[ΎὙὛὝὟ]"), "Υ"},
-//     {regexp.MustCompile("[ώὠὡὢὣὤὥὦὧῶ]"), "ω"},
-//     {regexp.MustCompile("[ΏὨὩὪὫὬὭὮὯ]"), "Ω"},
-// }
-
-// const strip_diacritics_rules: [(Regex, &str)] = [
-//     (Regex::new(["άἀἁἂἃἄἅἆἇὰάᾀᾁᾂᾃᾄᾅᾆᾇᾰᾱᾲᾳᾴᾶᾷ]"), "α"),
-// ];
-
 pub fn strip_diacritics(text: &str) -> String {
-    let strip_diacritics_rules = vec![
-        (Regex::new("[άἀἁἂἃἄἅἆἇὰάᾀᾁᾂᾃᾄᾅᾆᾇᾰᾱᾲᾳᾴᾶᾷ]").unwrap(), "α"),
-        (Regex::new("[ΆἈἉἊἋἌἍἎἏᾈᾉᾊᾋᾌᾍᾎᾏᾸᾹᾺΆᾼ]").unwrap(), "Α"),
-        (Regex::new("[ίἰἱἲἳἴἵὶῖϊ]").unwrap(), "ι"),
-    ];
-
     let mut stripped = text.to_string();
 
-    for (re, replacement) in strip_diacritics_rules {
-        stripped = re.replace_all(&stripped, replacement).to_string();
+    lazy_static! {
+        static ref STRIP_DIACRITICS_RULES: [(Regex, &'static str); 14] = [
+            (Regex::new("[άἀἁἂἃἄἅἆἇὰάᾀᾁᾂᾃᾄᾅᾆᾇᾰᾱᾲᾳᾴᾶᾷ]").unwrap(), "α"),
+            (Regex::new("[ΆἈἉἊἋἌἍἎἏᾈᾉᾊᾋᾌᾍᾎᾏᾸᾹᾺΆᾼ]").unwrap(), "Α"),
+            (Regex::new("[έἐἑἒἓἔἕὲέ]").unwrap(), "ε"),
+            (Regex::new("[ΈἘἙἚἛἜἝ]").unwrap(), "Ε"),
+            (Regex::new("[ΉἨἩἪἫἬἭἮἯ]").unwrap(), "Η"),
+            (Regex::new("[ίἰἱἲἳἴἵὶῖϊ]").unwrap(), "ι"),
+            (Regex::new("[ΊἶἷἸἹἺἻἼἽἾἿΪ]").unwrap(), "Ι"),
+            (Regex::new("[ήἠἡἢἣἤἥἦἧῆὴῇ]").unwrap(), "η"),
+            (Regex::new("[όὀὁὂὃὄὅὸ]").unwrap(), "ο"),
+            (Regex::new("[ΌὈὉὊὋὌὍ]").unwrap(), "Ο"),
+            (Regex::new("[ύὐὑὒὓὔὕὖὗ]").unwrap(), "υ"),
+            (Regex::new("[ΎὙὛὝὟ]").unwrap(), "Υ"),
+            (Regex::new("[ώὠὡὢὣὤὥὦὧῶ]").unwrap(), "ω"),
+            (Regex::new("[ΏὨὩὪὫὬὭὮὯ]").unwrap(), "Ω"),
+        ];
+    }
+
+    for (re, replacement) in STRIP_DIACRITICS_RULES.iter() {
+        stripped = re.replace_all(&stripped, *replacement).to_string();
     }
 
     stripped
 }
-
-// {"Αρνάκι άσπρο και παχύ", "Αρνακι ασπρο και παχυ"},
 
 #[cfg(test)]
 mod tests {
@@ -45,5 +36,9 @@ mod tests {
     #[test]
     fn test_strip_diacritics() {
         assert_eq!(strip_diacritics("Λαϊκά"), "Λαικα");
+        assert_eq!(
+            strip_diacritics("Αρνάκι άσπρο και παχύ"),
+            "Αρνακι ασπρο και παχυ"
+        );
     }
 }
