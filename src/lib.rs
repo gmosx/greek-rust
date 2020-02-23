@@ -1,5 +1,6 @@
-mod diacritics;
-mod transliteration;
+pub mod diacritics;
+pub mod transliteration;
+mod util;
 
 #[cfg(test)]
 mod tests {

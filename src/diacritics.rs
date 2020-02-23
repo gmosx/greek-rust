@@ -1,33 +1,29 @@
+use crate::util::Rule;
 use lazy_static::lazy_static;
-use regex::Regex;
 
-pub fn strip_diacritics(text: &str) -> String {
-    let mut stripped = text.to_string();
-
+pub fn strip_diacritics(input: &str) -> String {
     lazy_static! {
-        static ref STRIP_DIACRITICS_RULES: [(Regex, &'static str); 14] = [
-            (Regex::new("[άἀἁἂἃἄἅἆἇὰάᾀᾁᾂᾃᾄᾅᾆᾇᾰᾱᾲᾳᾴᾶᾷ]").unwrap(), "α"),
-            (Regex::new("[ΆἈἉἊἋἌἍἎἏᾈᾉᾊᾋᾌᾍᾎᾏᾸᾹᾺΆᾼ]").unwrap(), "Α"),
-            (Regex::new("[έἐἑἒἓἔἕὲέ]").unwrap(), "ε"),
-            (Regex::new("[ΈἘἙἚἛἜἝ]").unwrap(), "Ε"),
-            (Regex::new("[ΉἨἩἪἫἬἭἮἯ]").unwrap(), "Η"),
-            (Regex::new("[ίἰἱἲἳἴἵὶῖϊ]").unwrap(), "ι"),
-            (Regex::new("[ΊἶἷἸἹἺἻἼἽἾἿΪ]").unwrap(), "Ι"),
-            (Regex::new("[ήἠἡἢἣἤἥἦἧῆὴῇ]").unwrap(), "η"),
-            (Regex::new("[όὀὁὂὃὄὅὸ]").unwrap(), "ο"),
-            (Regex::new("[ΌὈὉὊὋὌὍ]").unwrap(), "Ο"),
-            (Regex::new("[ύὐὑὒὓὔὕὖὗ]").unwrap(), "υ"),
-            (Regex::new("[ΎὙὛὝὟ]").unwrap(), "Υ"),
-            (Regex::new("[ώὠὡὢὣὤὥὦὧῶ]").unwrap(), "ω"),
-            (Regex::new("[ΏὨὩὪὫὬὭὮὯ]").unwrap(), "Ω"),
+        static ref STRIP_DIACRITICS_RULES: [Rule; 14] = [
+            Rule::new("[άἀἁἂἃἄἅἆἇὰάᾀᾁᾂᾃᾄᾅᾆᾇᾰᾱᾲᾳᾴᾶᾷ]", "α"),
+            Rule::new("[ΆἈἉἊἋἌἍἎἏᾈᾉᾊᾋᾌᾍᾎᾏᾸᾹᾺΆᾼ]", "Α"),
+            Rule::new("[έἐἑἒἓἔἕὲέ]", "ε"),
+            Rule::new("[ΈἘἙἚἛἜἝ]", "Ε"),
+            Rule::new("[ΉἨἩἪἫἬἭἮἯ]", "Η"),
+            Rule::new("[ίἰἱἲἳἴἵὶῖϊ]", "ι"),
+            Rule::new("[ΊἶἷἸἹἺἻἼἽἾἿΪ]", "Ι"),
+            Rule::new("[ήἠἡἢἣἤἥἦἧῆὴῇ]", "η"),
+            Rule::new("[όὀὁὂὃὄὅὸ]", "ο"),
+            Rule::new("[ΌὈὉὊὋὌὍ]", "Ο"),
+            Rule::new("[ύὐὑὒὓὔὕὖὗ]", "υ"),
+            Rule::new("[ΎὙὛὝὟ]", "Υ"),
+            Rule::new("[ώὠὡὢὣὤὥὦὧῶ]", "ω"),
+            Rule::new("[ΏὨὩὪὫὬὭὮὯ]", "Ω"),
         ];
     }
 
-    for (re, replacement) in STRIP_DIACRITICS_RULES.iter() {
-        stripped = re.replace_all(&stripped, *replacement).to_string();
-    }
-
-    stripped
+    STRIP_DIACRITICS_RULES
+        .iter()
+        .fold(input.to_string(), |output, rule| rule.apply(&output))
 }
 
 #[cfg(test)]
