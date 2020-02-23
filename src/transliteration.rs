@@ -1,9 +1,10 @@
+use crate::diacritics::strip_diacritics;
 use crate::util::Rule;
 use lazy_static::lazy_static;
 
 pub fn to_greeklish(input: &str) -> String {
     lazy_static! {
-        static ref TO_GREEKLISH_RULES: [Rule; 97] = [
+        static ref TO_GREEKLISH_RULES: [Rule; 77] = [
             Rule::new("ΓΧ", "GX"),
             Rule::new("γχ", "gx"),
             Rule::new("ΤΘ", "T8"),
@@ -33,8 +34,8 @@ pub fn to_greeklish(input: &str) -> String {
             Rule::new("ΟΥ", "OY"),
             Rule::new("Α", "A"),
             Rule::new("α", "a"),
-            Rule::new("ά", "a"),
-            Rule::new("Ά", "A"),
+            // Rule::new("ά", "a"),
+            // Rule::new("Ά", "A"),
             Rule::new("Β", "B"),
             Rule::new("β", "b"),
             Rule::new("Γ", "G"),
@@ -43,23 +44,23 @@ pub fn to_greeklish(input: &str) -> String {
             Rule::new("δ", "d"),
             Rule::new("Ε", "E"),
             Rule::new("ε", "e"),
-            Rule::new("έ", "e"),
-            Rule::new("Έ", "E"),
+            // Rule::new("έ", "e"),
+            // Rule::new("Έ", "E"),
             Rule::new("Ζ", "Z"),
             Rule::new("ζ", "z"),
             Rule::new("Η", "H"),
             Rule::new("η", "h"),
-            Rule::new("ή", "h"),
-            Rule::new("Ή", "H"),
+            // Rule::new("ή", "h"),
+            // Rule::new("Ή", "H"),
             Rule::new("Θ", "TH"),
             Rule::new("θ", "th"),
             Rule::new("Ι", "I"),
-            Rule::new("Ϊ", "I"),
+            // Rule::new("Ϊ", "I"),
             Rule::new("ι", "i"),
-            Rule::new("ί", "i"),
-            Rule::new("ΐ", "i"),
-            Rule::new("ϊ", "i"),
-            Rule::new("Ί", "I"),
+            // Rule::new("ί", "i"),
+            // Rule::new("ΐ", "i"),
+            // Rule::new("ϊ", "i"),
+            // Rule::new("Ί", "I"),
             Rule::new("Κ", "K"),
             Rule::new("κ", "k"),
             Rule::new("Λ", "L"),
@@ -72,8 +73,8 @@ pub fn to_greeklish(input: &str) -> String {
             Rule::new("ξ", "ks"),
             Rule::new("Ο", "O"),
             Rule::new("ο", "o"),
-            Rule::new("Ό", "O"),
-            Rule::new("ό", "o"),
+            // Rule::new("Ό", "O"),
+            // Rule::new("ό", "o"),
             Rule::new("Π", "P"),
             Rule::new("π", "p"),
             Rule::new("Ρ", "R"),
@@ -83,11 +84,11 @@ pub fn to_greeklish(input: &str) -> String {
             Rule::new("Τ", "T"),
             Rule::new("τ", "t"),
             Rule::new("Υ", "Y"),
-            Rule::new("Ύ", "Y"),
-            Rule::new("Ϋ", "Y"),
-            Rule::new("ΰ", "y"),
-            Rule::new("ύ", "y"),
-            Rule::new("ϋ", "y"),
+            // Rule::new("Ύ", "Y"),
+            // Rule::new("Ϋ", "Y"),
+            // Rule::new("ΰ", "y"),
+            // Rule::new("ύ", "y"),
+            // Rule::new("ϋ", "y"),
             Rule::new("υ", "y"),
             Rule::new("Φ", "F"),
             Rule::new("φ", "f"),
@@ -97,8 +98,8 @@ pub fn to_greeklish(input: &str) -> String {
             Rule::new("ψ", "ps"),
             Rule::new("Ω", "w"),
             Rule::new("ω", "w"),
-            Rule::new("Ώ", "w"),
-            Rule::new("ώ", "w"),
+            // Rule::new("Ώ", "w"),
+            // Rule::new("ώ", "w"),
             Rule::new("ς", "s"),
             Rule::new(";", "?"),
         ];
@@ -106,7 +107,7 @@ pub fn to_greeklish(input: &str) -> String {
 
     TO_GREEKLISH_RULES
         .iter()
-        .fold(input.to_string(), |output, rule| rule.apply(&output))
+        .fold(strip_diacritics(&input), |output, rule| rule.apply(&output))
 }
 
 #[cfg(test)]
@@ -115,6 +116,7 @@ mod tests {
     #[test]
     fn test_to_greeklish() {
         assert_eq!(to_greeklish(""), "");
+        assert_eq!(to_greeklish("Ευτυχία"), "Eutyxia");
         assert_eq!(to_greeklish("Λαϊκά"), "Laika");
         assert_eq!(
             to_greeklish("Αρνάκι άσπρο και παχύ"),
