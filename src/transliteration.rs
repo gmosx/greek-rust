@@ -2,6 +2,9 @@ use crate::diacritics::strip_diacritics;
 use crate::util::Rule;
 use lazy_static::lazy_static;
 
+// TODO: add phonetic greeklish transliteration.
+// More: https://www.npmjs.com/package/greek-utils
+
 pub fn to_greeklish(input: &str) -> String {
     lazy_static! {
         static ref TO_GREEKLISH_RULES: [Rule; 77] = [
@@ -110,6 +113,38 @@ pub fn to_greeklish(input: &str) -> String {
         .fold(strip_diacritics(&input), |output, rule| rule.apply(&output))
 }
 
+// TODO: ugh, should remove, does not really work.
+#[deprecated]
+pub fn greeklish_to_phonetic_latin(input: &str) -> String {
+    lazy_static! {
+        static ref GREEKLISH_TO_PHONETIC_LATIN_RULES: [Rule; 1] = [Rule::new("h", "i"),];
+    }
+
+    GREEKLISH_TO_PHONETIC_LATIN_RULES
+        .iter()
+        .fold(strip_diacritics(&input), |output, rule| rule.apply(&output))
+}
+
+pub fn to_phonetic(input: &str) -> String {
+    lazy_static! {
+        static ref TO_PHONETIC_RULES: [Rule; 4] = [
+            Rule::new("η", "ι"),
+            Rule::new("Η", "Ι"),
+            Rule::new("ω", "ο"),
+            Rule::new("Ω", "Ο"),
+        ];
+    }
+
+    TO_PHONETIC_RULES
+        .iter()
+        .fold(strip_diacritics(&input), |output, rule| rule.apply(&output))
+}
+
+// TODO: this is unoptimized.
+pub fn to_phonetic_latin(input: &str) -> String {
+    to_greeklish(&to_phonetic(input))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -123,5 +158,11 @@ mod tests {
             "Arnaki aspro kai paxy"
         );
         assert_eq!(to_greeklish("Γιώργος Μοσχοβίτης"), "Giwrgos Mosxobiths");
+    }
+
+    #[test]
+    fn test_to_phonetic_latin() {
+        assert_eq!(to_phonetic_latin(""), "");
+        assert_eq!(to_phonetic_latin("Δημήτρης"), "Dimitris");
     }
 }
