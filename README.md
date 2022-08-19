@@ -8,6 +8,7 @@ General utilities for the Greek language and culture.
 
 ## TODO
 
+- replace `lazy_static` with `once_cell`.
 - from_greeklish
 - use diacritics in transliteration
 - transliteration

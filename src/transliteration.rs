@@ -110,7 +110,7 @@ pub fn to_greeklish(input: &str) -> String {
 
     TO_GREEKLISH_RULES
         .iter()
-        .fold(strip_diacritics(&input), |output, rule| rule.apply(&output))
+        .fold(strip_diacritics(input), |output, rule| rule.apply(&output))
 }
 
 // TODO: ugh, should remove, does not really work.
@@ -122,7 +122,7 @@ pub fn greeklish_to_phonetic_latin(input: &str) -> String {
 
     GREEKLISH_TO_PHONETIC_LATIN_RULES
         .iter()
-        .fold(strip_diacritics(&input), |output, rule| rule.apply(&output))
+        .fold(strip_diacritics(input), |output, rule| rule.apply(&output))
 }
 
 pub fn to_phonetic(input: &str) -> String {
@@ -137,7 +137,7 @@ pub fn to_phonetic(input: &str) -> String {
 
     TO_PHONETIC_RULES
         .iter()
-        .fold(strip_diacritics(&input), |output, rule| rule.apply(&output))
+        .fold(strip_diacritics(input), |output, rule| rule.apply(&output))
 }
 
 // TODO: this is unoptimized.
