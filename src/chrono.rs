@@ -1,15 +1,5 @@
 //! Time-related utilities.
 
-// pub static GREEK_MONTHS_MAP_SHORT: Lazy<HashMap<&str, u32>> = Lazy::new(|| {
-//     let mut m = HashMap::new();
-
-//     m.insert("Ιαν", 1);
-//     m.insert("Φεβ", 2);
-//     // ...
-
-//     m
-// });
-
 pub fn month_from_greek_name_short(greek_name: &str) -> Option<u32> {
     match greek_name {
         "Ιαν" => Some(1),

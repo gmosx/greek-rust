@@ -1,9 +1,11 @@
-use crate::util::Rule;
-use lazy_static::lazy_static;
+use std::sync::OnceLock;
 
-pub fn strip_diacritics(input: &str) -> String {
-    lazy_static! {
-        static ref STRIP_DIACRITICS_RULES: [Rule; 14] = [
+use crate::util::Rule;
+
+fn diacritics_rules() -> &'static Vec<Rule> {
+    static DIACRITICS_RULES: OnceLock<Vec<Rule>> = OnceLock::new();
+    DIACRITICS_RULES.get_or_init(|| {
+        vec![
             Rule::new("[άἀἁἂἃἄἅἆἇὰάᾀᾁᾂᾃᾄᾅᾆᾇᾰᾱᾲᾳᾴᾶᾷ]", "α"),
             Rule::new("[ΆἈἉἊἋἌἍἎἏᾈᾉᾊᾋᾌᾍᾎᾏᾸᾹᾺΆᾼ]", "Α"),
             Rule::new("[έἐἑἒἓἔἕὲέ]", "ε"),
@@ -18,10 +20,12 @@ pub fn strip_diacritics(input: &str) -> String {
             Rule::new("[ΎὙὛὝὟ]", "Υ"),
             Rule::new("[ώὠὡὢὣὤὥὦὧῶ]", "ω"),
             Rule::new("[ΏὨὩὪὫὬὭὮὯ]", "Ω"),
-        ];
-    }
+        ]
+    })
+}
 
-    STRIP_DIACRITICS_RULES
+pub fn strip_diacritics(input: &str) -> String {
+    diacritics_rules()
         .iter()
         .fold(input.to_string(), |output, rule| rule.apply(&output))
 }
