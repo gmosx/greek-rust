@@ -2,6 +2,8 @@ use std::sync::OnceLock;
 
 use crate::util::Rule;
 
+// #todo have a functions that strips only tones.
+
 fn diacritics_rules() -> &'static Vec<Rule> {
     static DIACRITICS_RULES: OnceLock<Vec<Rule>> = OnceLock::new();
     DIACRITICS_RULES.get_or_init(|| {

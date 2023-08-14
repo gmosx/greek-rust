@@ -4,6 +4,8 @@ use crate::diacritics::strip_diacritics;
 use crate::util::Rule;
 
 // #todo add phonetic greeklish transliteration.
+// #todo don't call strip_diacritics before transliteration?
+
 // More: https://www.npmjs.com/package/greek-utils
 
 fn greeklish_rules() -> &'static Vec<Rule> {
@@ -148,6 +150,7 @@ mod tests {
         assert_eq!(to_greeklish(""), "");
         assert_eq!(to_greeklish("Ευτυχία"), "Eutyxia");
         assert_eq!(to_greeklish("Λαϊκά"), "Laika");
+        assert_eq!(to_greeklish("Εύπορος"), "Euporos");
         assert_eq!(
             to_greeklish("Αρνάκι άσπρο και παχύ"),
             "Arnaki aspro kai paxy"
