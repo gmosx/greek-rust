@@ -2,9 +2,8 @@
 name = "greek"
 version = "0.1.0"
 authors = ["George Moschovitis <gmosx@reizu.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 regex = "1"
 lazy_static = "*"
-# once_cell = "1"

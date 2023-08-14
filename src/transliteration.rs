@@ -1,3 +1,5 @@
+use std::sync::OnceLock;
+
 use crate::diacritics::strip_diacritics;
 use crate::util::Rule;
 use lazy_static::lazy_static;
@@ -5,9 +7,10 @@ use lazy_static::lazy_static;
 // TODO: add phonetic greeklish transliteration.
 // More: https://www.npmjs.com/package/greek-utils
 
-pub fn to_greeklish(input: &str) -> String {
-    lazy_static! {
-        static ref TO_GREEKLISH_RULES: [Rule; 77] = [
+fn greeklish_rules() -> &'static Vec<Rule> {
+    static GREEKLISH_RULES: OnceLock<Vec<Rule>> = OnceLock::new();
+    GREEKLISH_RULES.get_or_init(|| {
+        vec![
             Rule::new("ΓΧ", "GX"),
             Rule::new("γχ", "gx"),
             Rule::new("ΤΘ", "T8"),
@@ -105,10 +108,12 @@ pub fn to_greeklish(input: &str) -> String {
             // Rule::new("ώ", "w"),
             Rule::new("ς", "s"),
             Rule::new(";", "?"),
-        ];
-    }
+        ]
+    })
+}
 
-    TO_GREEKLISH_RULES
+pub fn to_greeklish(input: &str) -> String {
+    greeklish_rules()
         .iter()
         .fold(strip_diacritics(input), |output, rule| rule.apply(&output))
 }
