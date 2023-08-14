@@ -1,7 +1,11 @@
 [package]
 name = "greek"
-version = "0.1.0"
+description = "General utilities for the Greek language and culture"
+version = "0.2.0"
+license = "Apache-2.0"
 authors = ["Georgios Moschovitis <george.moschovitis@gmail.com>"]
+keywords = ["greek", "transliteration"]
+repository = "https://github.com/gmosx/greek-rust"
 edition = "2021"
 
 [dependencies]
