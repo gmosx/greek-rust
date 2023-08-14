@@ -17,3 +17,16 @@ pub fn month_from_greek_name_short(greek_name: &str) -> Option<u32> {
         _ => None,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn month_from_greekname() {
+        assert_eq!(month_from_greek_name_short("Ιαν").unwrap(), 1);
+        assert_eq!(month_from_greek_name_short("Οκτ").unwrap(), 10);
+        assert_eq!(month_from_greek_name_short("Δεκ").unwrap(), 12);
+        assert_eq!(month_from_greek_name_short("Λάθος"), None);
+    }
+}
