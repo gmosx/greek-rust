@@ -4,9 +4,7 @@ use crate::diacritics::strip_diacritics;
 use crate::util::Rule;
 
 // #todo add phonetic greeklish transliteration.
-// #todo don't call strip_diacritics before transliteration?
-
-// More: https://www.npmjs.com/package/greek-utils
+// #todo strip _some_ diacritics and reduce greeklish_rules.
 
 fn greeklish_rules() -> &'static Vec<Rule> {
     static GREEKLISH_RULES: OnceLock<Vec<Rule>> = OnceLock::new();
@@ -41,8 +39,8 @@ fn greeklish_rules() -> &'static Vec<Rule> {
             Rule::new("ΟΥ", "OY"),
             Rule::new("Α", "A"),
             Rule::new("α", "a"),
-            // Rule::new("ά", "a"),
-            // Rule::new("Ά", "A"),
+            Rule::new("ά", "a"),
+            Rule::new("Ά", "A"),
             Rule::new("Β", "B"),
             Rule::new("β", "b"),
             Rule::new("Γ", "G"),
@@ -51,23 +49,23 @@ fn greeklish_rules() -> &'static Vec<Rule> {
             Rule::new("δ", "d"),
             Rule::new("Ε", "E"),
             Rule::new("ε", "e"),
-            // Rule::new("έ", "e"),
-            // Rule::new("Έ", "E"),
+            Rule::new("έ", "e"),
+            Rule::new("Έ", "E"),
             Rule::new("Ζ", "Z"),
             Rule::new("ζ", "z"),
             Rule::new("Η", "H"),
             Rule::new("η", "h"),
-            // Rule::new("ή", "h"),
-            // Rule::new("Ή", "H"),
+            Rule::new("ή", "h"),
+            Rule::new("Ή", "H"),
             Rule::new("Θ", "TH"),
             Rule::new("θ", "th"),
             Rule::new("Ι", "I"),
-            // Rule::new("Ϊ", "I"),
+            Rule::new("Ϊ", "I"),
             Rule::new("ι", "i"),
-            // Rule::new("ί", "i"),
-            // Rule::new("ΐ", "i"),
-            // Rule::new("ϊ", "i"),
-            // Rule::new("Ί", "I"),
+            Rule::new("ί", "i"),
+            Rule::new("ΐ", "i"),
+            Rule::new("ϊ", "i"),
+            Rule::new("Ί", "I"),
             Rule::new("Κ", "K"),
             Rule::new("κ", "k"),
             Rule::new("Λ", "L"),
@@ -80,8 +78,8 @@ fn greeklish_rules() -> &'static Vec<Rule> {
             Rule::new("ξ", "ks"),
             Rule::new("Ο", "O"),
             Rule::new("ο", "o"),
-            // Rule::new("Ό", "O"),
-            // Rule::new("ό", "o"),
+            Rule::new("Ό", "O"),
+            Rule::new("ό", "o"),
             Rule::new("Π", "P"),
             Rule::new("π", "p"),
             Rule::new("Ρ", "R"),
@@ -91,11 +89,11 @@ fn greeklish_rules() -> &'static Vec<Rule> {
             Rule::new("Τ", "T"),
             Rule::new("τ", "t"),
             Rule::new("Υ", "Y"),
-            // Rule::new("Ύ", "Y"),
-            // Rule::new("Ϋ", "Y"),
-            // Rule::new("ΰ", "y"),
-            // Rule::new("ύ", "y"),
-            // Rule::new("ϋ", "y"),
+            Rule::new("Ύ", "Y"),
+            Rule::new("Ϋ", "Y"),
+            Rule::new("ΰ", "y"),
+            Rule::new("ύ", "y"),
+            Rule::new("ϋ", "y"),
             Rule::new("υ", "y"),
             Rule::new("Φ", "F"),
             Rule::new("φ", "f"),
@@ -105,8 +103,8 @@ fn greeklish_rules() -> &'static Vec<Rule> {
             Rule::new("ψ", "ps"),
             Rule::new("Ω", "w"),
             Rule::new("ω", "w"),
-            // Rule::new("Ώ", "w"),
-            // Rule::new("ώ", "w"),
+            Rule::new("Ώ", "w"),
+            Rule::new("ώ", "w"),
             Rule::new("ς", "s"),
             Rule::new(";", "?"),
         ]
@@ -116,7 +114,7 @@ fn greeklish_rules() -> &'static Vec<Rule> {
 pub fn to_greeklish(input: &str) -> String {
     greeklish_rules()
         .iter()
-        .fold(strip_diacritics(input), |output, rule| rule.apply(&output))
+        .fold(input.to_string(), |output, rule| rule.apply(&output))
 }
 
 fn phonetic_rules() -> &'static Vec<Rule> {
@@ -156,6 +154,8 @@ mod tests {
             "Arnaki aspro kai paxy"
         );
         assert_eq!(to_greeklish("Γιώργος Μοσχοβίτης"), "Giwrgos Mosxobiths");
+        assert_eq!(to_greeklish("θεϊκός"), "theikos");
+        assert_eq!(to_greeklish("Αγλαΐα"), "Aglaia");
     }
 
     #[test]
